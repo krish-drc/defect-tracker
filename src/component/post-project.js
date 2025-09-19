@@ -6,7 +6,6 @@ import DashboardLayout from "../component/DashboardLayout";
 export default function PostProject() {
   const [form, setForm] = useState({
     projectName: "",
-    projectID: "",
     description: "",
     startDate: "",
     endDate: "",
@@ -15,6 +14,14 @@ export default function PostProject() {
 
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
+  const [projectID, setProjectID] = useState(""); // Store generated Project ID
+
+  // Generate unique Project ID
+  const generateProjectID = () => {
+    const prefix = "PROJ";
+    const randomNum = Math.floor(1000 + Math.random() * 9000); // 4-digit random number
+    return `${prefix}${randomNum}`;
+  };
 
   // Handle form input
   const handleChange = (e) => {
@@ -31,16 +38,19 @@ export default function PostProject() {
     setMsg("");
 
     try {
-      // Add document to Firestore
+      const generatedID = generateProjectID(); // Auto-generate Project ID
+
       await addDoc(collection(db, "projects"), {
         ...form,
+        projectID: generatedID, // use generated ID
         createdAt: serverTimestamp(),
       });
 
-      setMsg("✅ Project posted successfully!");
+      setProjectID(generatedID); // display generated ID
+      setMsg(`✅ Project posted successfully!`);
+
       setForm({
         projectName: "",
-        projectID: "",
         description: "",
         startDate: "",
         endDate: "",
@@ -56,95 +66,89 @@ export default function PostProject() {
 
   return (
     <DashboardLayout>
-    <div className="container mt-4">
-      <h2>Post a Project</h2>
-      {msg && <div className="alert alert-info">{msg}</div>}
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label>Project Name</label>
-          <input
-            type="text"
-            name="projectName"
-            className="form-control"
-            value={form.projectName}
-            onChange={handleChange}
-            required
-          />
-        </div>
+      <div className="container mt-4">
+        <h2>Post a Project</h2>
+        {msg && <div className="alert alert-info">{msg}</div>}
 
-        <div className="mb-3">
-          <label>Project ID</label>
-          <input
-            type="text"
-            name="projectID"
-            className="form-control"
-            value={form.projectID}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label>Description</label>
-          <textarea
-            name="description"
-            className="form-control"
-            rows={3}
-            value={form.description}
-            onChange={handleChange}
-            required
-          ></textarea>
-        </div>
-
-        <div className="row mb-3">
-          <div className="col">
-            <label>Start Date</label>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label>Project Name</label>
             <input
-              type="date"
-              name="startDate"
+              type="text"
+              name="projectName"
               className="form-control"
-              value={form.startDate}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col">
-            <label>End Date</label>
-            <input
-              type="date"
-              name="endDate"
-              className="form-control"
-              value={form.endDate}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col">
-            <label>Status</label>
-            <select
-              name="status"
-              className="form-control"
-              value={form.status}
+              value={form.projectName}
               onChange={handleChange}
               required
-            >
-              <option value="">Select</option>
-              <option value="Planned">Planned</option>
-              <option value="In-Progress">In-Progress</option>
-              <option value="Completed">Completed</option>
-              <option value="On-Hold">On-Hold</option>
-            </select>
+            />
           </div>
-        </div>
 
-        {/* ✅ Button fixed */}
-        <button
-          className="btn btn-primary mt-3"
-          type="submit"
-          disabled={loading}
-        >
-          {loading ? "Posting..." : "Post Project"}
-        </button>
-      </form>
-    </div>
+          <div className="mb-3">
+            <label>Description</label>
+            <textarea
+              name="description"
+              className="form-control"
+              rows={3}
+              value={form.description}
+              onChange={handleChange}
+              required
+            ></textarea>
+          </div>
+
+          <div className="row mb-3">
+            <div className="col">
+              <label>Start Date</label>
+              <input
+                type="date"
+                name="startDate"
+                className="form-control"
+                value={form.startDate}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col">
+              <label>End Date</label>
+              <input
+                type="date"
+                name="endDate"
+                className="form-control"
+                value={form.endDate}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col">
+              <label>Status</label>
+              <select
+                name="status"
+                className="form-control"
+                value={form.status}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select</option>
+                <option value="Planned">Planned</option>
+                <option value="In-Progress">In-Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="On-Hold">On-Hold</option>
+              </select>
+            </div>
+          </div>
+
+          <button
+            className="btn btn-primary mt-3"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Posting..." : "Post Project"}
+          </button>
+        </form>
+
+        {projectID && (
+          <div className="mt-3">
+            <strong>Generated Project ID:</strong> {projectID}
+          </div>
+        )}
+      </div>
     </DashboardLayout>
   );
 }

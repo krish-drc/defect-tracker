@@ -8,12 +8,12 @@ import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAQXqF3eUyltWIYtuq96wuGHnwsuLUYD10",
-  authDomain: "project-refector.firebaseapp.com",
-  projectId: "project-refector",
-  storageBucket: "project-refector.firebasestorage.app",
-  messagingSenderId: "564789809566",
-  appId: "1:564789809566:web:0e6c00cb3d48a6d200c68f"
+  apiKey: "AIzaSyBgb9nfFJbBCh_mm-6L2dOtMspvpFguC4A",
+  authDomain: "defect-tracker-e5862.firebaseapp.com",
+  projectId: "defect-tracker-e5862",
+  storageBucket: "defect-tracker-e5862.firebasestorage.app",
+  messagingSenderId: "52085565459",
+  appId: "1:52085565459:web:3591b03a96c48aa63b77e6"
 };
 
 // Initialize Firebase
